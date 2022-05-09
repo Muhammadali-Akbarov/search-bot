@@ -1,1 +1,1 @@
-web: bin/telebot-golang
+worker: bin/telebot-golang
