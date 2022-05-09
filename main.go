@@ -7,12 +7,10 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
-	"os"
 	"regexp"
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/joho/godotenv"
 )
 
 var numericKeyboard = tgbotapi.NewReplyKeyboard(
@@ -29,11 +27,8 @@ var numericKeyboard = tgbotapi.NewReplyKeyboard(
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_TOKEN"))
+
+	bot, err := tgbotapi.NewBotAPI("5025387786:AAHDgd6QoLVrb27qMUIQ7BSPTGtoPrE1N-0")
 	if err != nil {
 		log.Panic(err)
 	}
