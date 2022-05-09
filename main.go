@@ -28,7 +28,7 @@ var numericKeyboard = tgbotapi.NewReplyKeyboard(
 
 func main() {
 
-	bot, err := tgbotapi.NewBotAPI("5025387786:AAHDgd6QoLVrb27qMUIQ7BSPTGtoPrE1N-0")
+	bot, err := tgbotapi.NewBotAPI("5368494360:AAGHmkcn_CCzzKXYTfVUmoPtBwcqeQOkG0Y")
 	if err != nil {
 		log.Panic(err)
 	}
