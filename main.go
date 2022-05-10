@@ -76,7 +76,6 @@ func main() {
 				log.Panic(err)
 			}
 		}
-
 	}
 }
 
