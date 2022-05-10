@@ -53,9 +53,9 @@ func main() {
 		resp_image := tgbotapi.NewPhoto(int64(update.Message.Chat.ID), file)
 		match, _ := regexp.MatchString(`^https://www.salonlfc.com`, img)
 		if match {
-			resp_image.Caption = "<em>Image was not found by @SearchImagesRobot</em>"
+			resp_image.Caption = "<em>Image was not found by @ABCMediaBot</em>"
 		} else {
-			resp_image.Caption = "<em>Image was found by @SearchImagesRobot</em>"
+			resp_image.Caption = "<em>Image was found by @ABCMediaBot</em>"
 		}
 		resp_image.ParseMode = "html"
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Keyboard Mode")
