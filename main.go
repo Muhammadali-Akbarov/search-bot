@@ -23,7 +23,7 @@ func main() {
 		}
 		img, err := utils.GetImage(fmt.Sprintf("%v", update.Message.Text))
 		if err != nil {
-			log.Println(err)
+			log.Println("Error getting image", err)
 		}
 		file := tgbotapi.FileURL(img)
 		resp_image := tgbotapi.NewPhoto(int64(update.Message.Chat.ID), file)
@@ -31,6 +31,7 @@ func main() {
 
 		switch update.Message.Text {
 		case "/start":
+			utils.RegisterUserFunc(update)
 			bot.Send(app.SayWelcome(&update))
 		default:
 			if _, err := bot.Send(resp_image); err != nil {
