@@ -1,34 +1,17 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"math/rand"
-	"net/http"
-	"regexp"
-	"strings"
+
+	"github.com/Muhammadali-Akbarov/telebot-golang/utils"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-var numericKeyboard = tgbotapi.NewReplyKeyboard(
-	tgbotapi.NewKeyboardButtonRow(
-		tgbotapi.NewKeyboardButton("1"),
-		tgbotapi.NewKeyboardButton("2"),
-		tgbotapi.NewKeyboardButton("3"),
-	),
-	tgbotapi.NewKeyboardButtonRow(
-		tgbotapi.NewKeyboardButton("4"),
-		tgbotapi.NewKeyboardButton("5"),
-		tgbotapi.NewKeyboardButton("6"),
-	),
-)
-
 func main() {
 
-	bot, err := tgbotapi.NewBotAPI("5339993015:AAG8jKZbb25HlCn8Sip_3KxDg7fCfdaymQM")
+	bot, err := tgbotapi.NewBotAPI("5025387786:AAEpYYZySyJ0SGMDn0DFhKMxpyleJFx3aBM")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -39,25 +22,19 @@ func main() {
 	u.Timeout = 60
 	updates := bot.GetUpdatesChan(u)
 	for update := range updates {
-		if update.Message == nil { // ignore non-Message updates
+		if update.Message == nil {
 			continue
 		}
-
 		if err != nil {
 			log.Println(err)
 		}
-		search := fmt.Sprintf("%v", update.Message.Text)
-		search = strings.ReplaceAll(search, " ", "")
-		img := sendRequest(search)
+		img, err := utils.GetImage(fmt.Sprintf("%v", update.Message.Text))
+		if err != nil {
+			log.Println(err)
+		}
 		file := tgbotapi.FileURL(img)
 		resp_image := tgbotapi.NewPhoto(int64(update.Message.Chat.ID), file)
-		match, _ := regexp.MatchString(`^https://www.salonlfc.com`, img)
-		if match {
-			resp_image.Caption = "<em>Image was not found by @ABCMediaBot</em>"
-		} else {
-			resp_image.Caption = "<em>Image was found by @ABCMediaBot</em>"
-		}
-		resp_image.ParseMode = "html"
+		utils.DoMatch(&resp_image, img)
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Keyboard Mode")
 		greeting := fmt.Sprintf("Welcome <b>%v</b>", update.Message.Chat.FirstName)
 		to_admin := tgbotapi.NewMessage(update.Message.Chat.ID, greeting)
@@ -66,7 +43,7 @@ func main() {
 		case "/start":
 			bot.Send(to_admin)
 		case "open":
-			msg.ReplyMarkup = numericKeyboard
+			msg.ReplyMarkup = utils.NumericKeyboard
 			bot.Send(msg)
 		case "close":
 			msg.ReplyMarkup = tgbotapi.NewRemoveKeyboard(true)
@@ -76,47 +53,5 @@ func main() {
 				log.Panic(err)
 			}
 		}
-	}
-}
-
-type SimpleStruct struct {
-	Value []struct {
-		ThumbnailUrl string `json:"thumbnailUrl"`
-	}
-}
-
-func sendRequest(search string) string {
-	var mystruct SimpleStruct
-	url := fmt.Sprintf("https://bing-image-search1.p.rapidapi.com/images/search?q=%v", search)
-	client := &http.Client{}
-	r, errReq := http.NewRequest("GET", url, nil)
-
-	if errReq != nil {
-		log.Println(errReq)
-
-	}
-
-	r.Header.Add("X-RapidAPI-Host", "bing-image-search1.p.rapidapi.com")
-	r.Header.Add("X-RapidAPI-Key", "ff6bdaf671mshcc8f1ee56cc16cbp1b5c71jsnde0483b0b93d")
-
-	resp, _ := client.Do(r)
-	bytes, errRead := ioutil.ReadAll(resp.Body)
-	if errRead != nil {
-		log.Println(errRead)
-	}
-
-	unMarshall := json.Unmarshal(bytes, &mystruct)
-	if unMarshall != nil {
-		log.Println(unMarshall)
-	}
-
-	if len(mystruct.Value) == 0 {
-		image := "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png"
-		return image
-	} else {
-		myIndex := rand.Intn(len(mystruct.Value))
-		image := fmt.Sprintf("%v", mystruct.Value[myIndex])
-		replaced := regexp.MustCompile(`^{+|}+$`).ReplaceAllString(image, ``)
-		return replaced
 	}
 }
