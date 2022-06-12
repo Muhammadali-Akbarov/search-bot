@@ -9,12 +9,17 @@ import (
 	"net/http"
 	"regexp"
 
+	"github.com/Muhammadali-Akbarov/telebot-golang/config"
 	"github.com/Muhammadali-Akbarov/telebot-golang/models"
 )
 
 func SendRequest(search string) string {
 	var mystruct models.SimpleStruct
-	url := fmt.Sprintf("https://bing-image-search1.p.rapidapi.com/images/search?q=%v", search)
+	api_key := config.GetEnv("API_KEY")
+	api_host := config.GetEnv("API_HOST")
+	img_404 := config.GetEnv("IMG_404")
+
+	url := fmt.Sprintf("https://%v/images/search?q=%v", api_host, search)
 	client := &http.Client{}
 	r, errReq := http.NewRequest("GET", url, nil)
 
@@ -23,8 +28,8 @@ func SendRequest(search string) string {
 
 	}
 
-	r.Header.Add("X-RapidAPI-Host", "bing-image-search1.p.rapidapi.com")
-	r.Header.Add("X-RapidAPI-Key", "ff6bdaf671mshcc8f1ee56cc16cbp1b5c71jsnde0483b0b93d")
+	r.Header.Add("X-RapidAPI-Key", api_key)
+	r.Header.Add("X-RapidAPI-Host", api_host)
 
 	resp, _ := client.Do(r)
 	bytes, errRead := ioutil.ReadAll(resp.Body)
@@ -38,7 +43,7 @@ func SendRequest(search string) string {
 	}
 
 	if len(mystruct.Value) == 0 {
-		image := "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png"
+		image := img_404
 		return image
 	} else {
 		myIndex := rand.Intn(len(mystruct.Value))
