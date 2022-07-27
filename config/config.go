@@ -7,7 +7,7 @@ import (
 )
 
 func GetEnv(key string) string {
-	viper.SetConfigFile(".env")
+	viper.SetConfigFile("conf.yaml")
 
 	err := viper.ReadInConfig()
 
