@@ -1,1 +1,1 @@
-worker: bin/media-search-telebot
+worker: bin/telebot-golang
