@@ -6,7 +6,7 @@ Live project at https://telegram.me/abcmediabot
 </p>
 
 # Installation
-* 1 - clone repo https://github.com/Muhammadali-Akbarov/media-search-telebot
+* 1 - clone repo https://github.com/Muhammadali-Akbarov/search-bot
 * 2 - cd into project "cd media-search-telebot"
 * 3 - create an .env file add your configs
 * 4 - go run main.go
