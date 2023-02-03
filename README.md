@@ -1,6 +1,5 @@
 # ABC Media v1 
 Sourcode and Resources for ABC Media v1 </br>
-Live project at https://telegram.me/abcmediabot
 <p align="center">
  <img src="./media/img.jpg" width="500">
 </p>
